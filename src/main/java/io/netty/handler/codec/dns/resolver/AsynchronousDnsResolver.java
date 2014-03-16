@@ -36,6 +36,8 @@ import io.netty.handler.codec.dns.DnsResponse;
 import io.netty.handler.codec.dns.DnsResponseCode;
 import io.netty.handler.codec.dns.DnsResponseDecoder;
 import io.netty.handler.codec.dns.DnsResponseException;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.Promise;
 import io.netty.util.internal.PlatformDependent;
@@ -105,6 +107,9 @@ public final class AsynchronousDnsResolver {
         ChannelConfig config = channel.config();
         config.setOption(ChannelOption.DATAGRAM_CHANNEL_ACTIVE_ON_REGISTRATION, true);
         config.setOption(ChannelOption.SO_BROADCAST, true);
+        // uncomment below to enable runtime bytes log
+        // channel.pipeline().addLast("log", new LoggingHandler(LogLevel.INFO));
+
         channel.pipeline().addLast("decoder", RESPONSE_DECODER).addLast("encoder", QUERY_ENCODER)
                 .addLast("handler", RESPONSE_HANDLER);
         ChannelPromise regFuture = channel.newPromise();

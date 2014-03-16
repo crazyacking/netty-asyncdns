@@ -5,7 +5,6 @@ package io.netty.handler.codec.dns.demo;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import io.netty.bootstrap.ChannelFactory;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.DatagramChannel;
+import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.handler.codec.dns.resolver.AsynchronousDnsResolver;
 
@@ -39,28 +39,28 @@ public class AsyncDnsResolverDemo {
 						return new NioDatagramChannel();
 					}},
 				new NioEventLoopGroup(1)
-				,new InetSocketAddress("199.91.73.222", 53)  // V2EX DNS
-				,new InetSocketAddress("178.79.131.110", 53) // V2EX DNS
-				,new InetSocketAddress("8.8.4.4", 53)  // google
-				,new InetSocketAddress("8.8.8.8", 53) // google
-//				,new InetSocketAddress("208.67.222.222", 53)  // OpenDNS exception null
-//				,new InetSocketAddress("208.67.220.220", 53) // OpenDNS exception null
-//					,new InetSocketAddress("114.114.114.114", 53)  // 114 no resp
-//					,new InetSocketAddress("114.114.115.115", 53)  // 114 no resp
-				//,new InetSocketAddress("223.6.6.6", 53)  ali
-				//,new InetSocketAddress("223.5.5.5", 53)  ali
-				//,new InetSocketAddress("202.101.172.35", 53)  // dianxin
-				//,new InetSocketAddress("202.101.172.47", 53)  // dianxin
+//				,new InetSocketAddress("8.8.8.8", 53) // google
+//				,new InetSocketAddress("8.8.4.4", 53)  // google
+//				,new InetSocketAddress("114.114.114.114", 53)  // 114 only ipv4
+//				,new InetSocketAddress("114.114.115.115", 53)  // 114 only ipv4
+//				,new InetSocketAddress("223.6.6.6", 53)  //	ali  only ipv4
+//				,new InetSocketAddress("223.5.5.5", 53)  //	ali  only ipv4
+				,new InetSocketAddress("202.101.172.35", 53)  // dianxin only ipv4
+//				,new InetSocketAddress("202.101.172.47", 53)  // dianxin only ipv4
+//					,new InetSocketAddress("208.67.222.222", 53)  // OpenDNS  no resp
+//					,new InetSocketAddress("208.67.220.220", 53) // OpenDNS  no resp
+//					,new InetSocketAddress("199.91.73.222", 53)  // V2EX DNS
+//					,new InetSocketAddress("178.79.131.110", 53) // V2EX DNS
 				);
-		final String domain = "www.a.shifen.com";
+		final String domain = //"www.a.shifen.com";
 				//"www.baidu.com";
-				// "www.yinxiang.com";
+				"www.yinxiang.com";
 				//"isdom.myqnapcloud.com";
 		
 		Object addr = null;
 		
 		try {
-			addr = resolver.lookup(domain).sync().get();
+			addr = resolver.lookup(domain, InternetProtocolFamily.IPv4).sync().get();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOG.error("exception when resolve", e);
